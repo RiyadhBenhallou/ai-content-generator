@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../globals.css";
 import Providers from "../providers";
+import SideNav from "./_components/side-nav";
+import Header from "./_components/header";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -30,8 +32,16 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          dashboard layout
-          {children}
+          <div className="flex">
+            <div className="hidden md:block md:w-1/5">
+              <SideNav />
+            </div>
+            <div className="md:w-4/5 mx-auto container md:mx-0">
+              <Header />
+
+              <div className="">{children}</div>
+            </div>
+          </div>
         </body>
       </html>
     </Providers>
