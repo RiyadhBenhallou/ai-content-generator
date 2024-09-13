@@ -1,9 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
 import { aiTemplates } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import TemplateCard from "./_components/template-card";
 
 export default function Dashboard() {

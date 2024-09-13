@@ -12,7 +12,7 @@ import Link from "next/link";
 export default function TemplateCard({ template }: { template: TemplateType }) {
   return (
     <Card key={template.slug} className="hover:scale-105 transition-all">
-      <Link href={`/dashboard/templates/${template.slug}`}>
+      <Link href={`/dashboard/template/${template.slug}`}>
         <CardHeader>
           <CardTitle className="flex flex-col gap-6">
             <template.icon className="h-12 w-12 mb-2" />
