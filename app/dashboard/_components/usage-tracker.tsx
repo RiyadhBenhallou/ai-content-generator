@@ -5,12 +5,14 @@ import { Progress } from "@/components/ui/progress";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { fetchUserActivity } from "../template/[slug]/actions";
+import { useCreditsUsage } from "../providers";
 
 export default function UsageTracker() {
   const { data: session } = useSession();
   console.log(session?.user?.id);
 
-  const [usedCredits, setUsedCredits] = useState<number | null>(null);
+  // const [usedCredits, setUsedCredits] = useState<number | null>(null);
+  const { usedCredits, setUsedCredits } = useCreditsUsage();
   const totalCredits = 10000;
 
   useEffect(() => {

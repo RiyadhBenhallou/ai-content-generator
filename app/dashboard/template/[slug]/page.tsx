@@ -11,12 +11,14 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { fetchUserActivity, saveOutputAction } from "./actions";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useCreditsUsage } from "../../providers";
 export default function TemplatePage({
   params: { slug },
 }: {
   params: { slug: string };
 }) {
   const router = useRouter();
+  const { usedCredits, setUsedCredits } = useCreditsUsage();
   const template = aiTemplates.find((t) => t.slug === slug);
   if (!template) {
     return <div>Template not found</div>;
@@ -55,6 +57,14 @@ export default function TemplatePage({
       }
     });
   };
+
+  useEffect(() => {
+    async function updateCreditsUsage() {
+      const userActivity = await fetchUserActivity(session?.user?.id!);
+      setUsedCredits(userActivity);
+    }
+    updateCreditsUsage();
+  }, [isLoading]);
 
   const editorRef = useRef<Editor>(null);
 
