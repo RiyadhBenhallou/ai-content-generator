@@ -11,18 +11,28 @@ import { aiOutput } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { desc, eq } from "drizzle-orm";
 import CopyToClipboard from "./_components/copy-to-clipboard";
+import PaginationControl from "./_components/pagination-control";
 
-export default async function History() {
+const LIMIT = 10;
+
+export default async function History({
+  searchParams: { page = "1" },
+}: {
+  searchParams: {
+    page: string;
+  };
+}) {
   const session = await auth();
   if (!session) {
     return;
   }
   const userId = session.user?.id;
-  const history = await db
-    .select()
-    .from(aiOutput)
-    .where(eq(aiOutput.userId, userId!))
-    .orderBy(desc(aiOutput.createdAt));
+  const history = await db.query.aiOutput.findMany({
+    where: eq(aiOutput.userId, userId!),
+    orderBy: desc(aiOutput.createdAt),
+    limit: LIMIT,
+    offset: (Number(page) - 1) * LIMIT,
+  });
   return (
     <div className="container mx-auto py-10 px-5">
       <h1 className="text-2xl font-bold mb-4">History</h1>
@@ -58,6 +68,10 @@ export default async function History() {
           </TableBody>
         </Table>
       </div>
+      <PaginationControl
+        currentPage={Number(page)}
+        hasNextPage={history.length === LIMIT}
+      />
     </div>
   );
 }
