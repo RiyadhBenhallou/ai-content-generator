@@ -1,27 +1,29 @@
 "use client";
-import { unstable_noStore } from "next/cache";
-import { aiTemplates } from "@/lib/utils";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { chatSession } from "@/lib/ai-model";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { chatSession } from "@/lib/ai-model";
+import { aiTemplates } from "@/lib/utils";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
 import { Copy, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
-
+import { fetchUserActivity, saveOutputAction } from "./actions";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 export default function TemplatePage({
   params: { slug },
 }: {
   params: { slug: string };
 }) {
-  unstable_noStore();
+  const router = useRouter();
   const template = aiTemplates.find((t) => t.slug === slug);
   if (!template) {
     return <div>Template not found</div>;
   }
 
   const [output, setOutput] = useState("");
+  const { data: session } = useSession();
 
   const [isLoading, startTransition] = useTransition();
 
@@ -30,16 +32,23 @@ export default function TemplatePage({
     const formData = new FormData(event.currentTarget);
     const prompt = template.form
       .map((field) => `${field.label}: ${formData.get(field.name)}`)
-      .join("\n");
+      .join(",");
     // Combine the template's prompt with the user's input
     const fullPrompt = `${template.prompt}\n\n${prompt}`;
     console.log("Full prompt:", fullPrompt);
+    const userActivity = await fetchUserActivity(session?.user?.id!);
+    if (userActivity >= 10000) {
+      router.push("/dashboard/billing");
+      return;
+    }
+
     startTransition(async () => {
       try {
         const result = await chatSession.sendMessage(fullPrompt);
         const response = await result.response;
         const text = response.text();
         setOutput(text);
+        await saveOutputAction(template.name, prompt, text);
       } catch (error) {
         console.error("Error generating content:", error);
         setOutput("An error occurred while generating content.");
@@ -123,13 +132,12 @@ export default function TemplatePage({
               className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700"
               onClick={handleCopy}
             >
-              <Copy />
+              <Copy size={14} />
             </Button>
           </div>
           <Editor
             ref={editorRef}
-            initialValue={output || "hello react editor world!"}
-            value={output}
+            initialValue={""}
             // previewStyle="vertical"
             height="600px"
             initialEditType="markdown"

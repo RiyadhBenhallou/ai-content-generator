@@ -3,11 +3,12 @@ import { Bot, Home, History, CreditCard, Settings } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
+import UsageTracker from "./usage-tracker";
 
 export default function SideNav() {
   const pathname = usePathname();
   return (
-    <div className="min-h-screen p-4 border-r-1 border-gray-300">
+    <div className="min-h-screen p-4 border-r-1 border-gray-300 relative">
       <div className="flex justify-center mb-8">
         <Bot className="text-blue-600" size={50} />
       </div>
@@ -78,6 +79,7 @@ export default function SideNav() {
           </Link>
         </Button>
       </nav>
+      <UsageTracker />
     </div>
   );
 }

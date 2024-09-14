@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../globals.css";
-import Providers from "../providers";
+import Providers from "./providers";
 import SideNav from "./_components/side-nav";
 import Header from "./_components/header";
 
@@ -27,13 +27,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <Providers>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <Providers>
           <div className="flex">
-            <div className="hidden md:block md:w-1/5">
+            <div className="hidden md:block md:w-1/5 border-r border-gray-200">
               <SideNav />
             </div>
             <div className="md:w-4/5 mx-auto container md:mx-0">
@@ -42,8 +42,8 @@ export default function RootLayout({
               <div className="">{children}</div>
             </div>
           </div>
-        </body>
-      </html>
-    </Providers>
+        </Providers>
+      </body>
+    </html>
   );
 }

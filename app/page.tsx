@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { db } from "@/db";
 import { auth, signIn, signOut } from "@/lib/auth";
 import { Github } from "lucide-react";
 

@@ -1,3 +1,4 @@
+import { relations, sql } from "drizzle-orm";
 import {
   boolean,
   timestamp,
@@ -5,6 +6,7 @@ import {
   text,
   primaryKey,
   integer,
+  serial,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -84,3 +86,25 @@ export const authenticators = pgTable(
     }),
   })
 );
+
+export const aiOutput = pgTable("ai_output", {
+  id: serial("id").primaryKey(),
+  formData: text("form_data").notNull(),
+  output: text("output").notNull(),
+  templateName: text("template_name").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at", { mode: "date" }).notNull().defaultNow(),
+});
+
+export const userRelations = relations(users, ({ many }) => ({
+  aiOutput: many(aiOutput),
+}));
+
+export const aiOutputRelations = relations(aiOutput, ({ one }) => ({
+  user: one(users, {
+    fields: [aiOutput.userId],
+    references: [users.id],
+  }),
+}));
