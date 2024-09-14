@@ -44,7 +44,7 @@ export default function SideNav() {
             <span>History</span>
           </Link>
         </Button>
-        <Button
+        {/* <Button
           asChild
           variant="ghost"
           className={`w-full justify-start ${
@@ -60,7 +60,7 @@ export default function SideNav() {
             <CreditCard size={24} />
             <span>Billing</span>
           </Link>
-        </Button>
+        </Button> */}
         <Button
           asChild
           variant="ghost"
