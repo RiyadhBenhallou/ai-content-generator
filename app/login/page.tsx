@@ -66,7 +66,7 @@ export default function LoginPage() {
 
             <div className="text-center text-sm text-gray-500 mt-4">
               <p>
-                &copy; {new Date().getFullYear()} Contentify. All rights
+                &copy; {new Date().getFullYear()} Verbosity AI. All rights
                 reserved.
               </p>
               <p className="mt-1">
