@@ -12,6 +12,8 @@ import { fetchUserActivity, saveOutputAction } from "./actions";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useCreditsUsage } from "../../providers";
+import { useToast } from "@/hooks/use-toast";
+
 export default function TemplatePage({
   params: { slug },
 }: {
@@ -38,19 +40,26 @@ export default function TemplatePage({
     // Combine the template's prompt with the user's input
     const fullPrompt = `${template.prompt}\n\n${prompt}`;
     console.log("Full prompt:", fullPrompt);
-    const userActivity = await fetchUserActivity(session?.user?.id!);
-    if (userActivity >= 10000) {
-      router.push("/dashboard/billing");
-      return;
-    }
 
     startTransition(async () => {
       try {
+        if (usedCredits >= 10000) {
+          editorRef.current
+            ?.getInstance()
+            .setMarkdown(
+              "**You have used all your credits. Please buy more credits.**"
+            );
+          return;
+        }
         const result = await chatSession.sendMessage(fullPrompt);
         const response = await result.response;
         const text = response.text();
         setOutput(text);
         await saveOutputAction(template.name, prompt, text);
+
+        // Count words in the generated text
+        const wordCount = text.split(/\s+/).length;
+        setUsedCredits((prevCredits: any) => prevCredits + wordCount);
       } catch (error) {
         console.error("Error generating content:", error);
         setOutput("An error occurred while generating content.");
@@ -58,22 +67,16 @@ export default function TemplatePage({
     });
   };
 
-  useEffect(() => {
-    async function updateCreditsUsage() {
-      const userActivity = await fetchUserActivity(session?.user?.id!);
-      setUsedCredits(userActivity);
-    }
-    updateCreditsUsage();
-  }, [isLoading]);
-
   const editorRef = useRef<Editor>(null);
-
+  const { toast } = useToast();
   const handleCopy = () => {
     if (editorRef.current) {
       const content = editorRef.current.getInstance().getMarkdown();
       navigator.clipboard.writeText(content).then(() => {
         console.log("Content copied to clipboard");
-        // You can add a toast notification here if desired
+        toast({
+          description: "The text has been copied to your clipboard.",
+        });
       });
     }
   };
@@ -133,7 +136,6 @@ export default function TemplatePage({
         </div>
       </div>
       <div className="p-5 col-span-3">
-        {/* <OutputSection content={output} /> */}
         <div className="bg-white self-start">
           <div className="flex justify-between items-center p-2">
             Your Result:
@@ -148,7 +150,6 @@ export default function TemplatePage({
           <Editor
             ref={editorRef}
             initialValue={""}
-            // previewStyle="vertical"
             height="600px"
             initialEditType="markdown"
             useCommandShortcut={true}

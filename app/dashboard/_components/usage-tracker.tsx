@@ -47,7 +47,10 @@ export default function UsageTracker() {
         </div>
         <Progress value={percentageUsed} className="h-2" />
       </div>
-      <Button className="w-full mt-4 bg-blue-600 text-white hover:bg-blue-700">
+      <Button
+        className="w-full mt-4 bg-blue-600 text-white hover:bg-blue-700 text-xs"
+        disabled
+      >
         Buy Credits
       </Button>
     </div>

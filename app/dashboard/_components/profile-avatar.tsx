@@ -37,7 +37,7 @@ export default function ProfileAvatar({ user }: { user: any }) {
             </div>
           </div>
           <div className="grid gap-2">
-            <Button
+            {/* <Button
               variant="ghost"
               className="flex items-center justify-start gap-2"
               asChild
@@ -46,7 +46,7 @@ export default function ProfileAvatar({ user }: { user: any }) {
                 <Settings className="h-4 w-4" />
                 Settings
               </Link>
-            </Button>
+            </Button> */}
             {/* <Button
               variant="ghost"
               className="flex items-center justify-start gap-2"

@@ -61,7 +61,7 @@ export default function SideNav() {
             <span>Billing</span>
           </Link>
         </Button> */}
-        <Button
+        {/* <Button
           asChild
           variant="ghost"
           className={`w-full justify-start ${
@@ -77,7 +77,7 @@ export default function SideNav() {
             <Settings size={24} />
             <span>Settings</span>
           </Link>
-        </Button>
+        </Button> */}
       </nav>
       <UsageTracker />
     </div>
