@@ -14,7 +14,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           <div className="space-y-8 xl:col-span-1">
-            <Link href="/" className="flex items-center">
+            <Link href="/" target="_blank" className="flex items-center">
               <span className="sr-only">Verbosity AI</span>
               <Bot className="h-12 w-12 text-blue-600" />
               <span className="ml-3 text-xl font-bold text-gray-900">
@@ -26,41 +26,46 @@ export default function Footer() {
               your creativity and productivity with Verbosity AI.
             </p>
             <div className="flex space-x-6">
-              <a
+              <Link
                 href="https://www.facebook.com/Riyadh.Benhallou/"
+                target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
                 <span className="sr-only">Facebook</span>
                 <Facebook className="h-6 w-6" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="https://www.instagram.com/riyadh.bnhl/"
+                target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
                 <span className="sr-only">Instagram</span>
                 <Instagram className="h-6 w-6" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="https://x.com/RiadhBenhallou"
+                target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
                 <span className="sr-only">Twitter</span>
                 <Twitter className="h-6 w-6" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="https://github.com/RiyadhBenhallou"
+                target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
                 <span className="sr-only">GitHub</span>
                 <Github className="h-6 w-6" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="https://www.linkedin.com/in/riyadh-benhallou-8a9101291"
+                target="_blank"
                 className="text-gray-400 hover:text-gray-500"
               >
                 <span className="sr-only">LinkedIn</span>
                 <Linkedin className="h-6 w-6" />
-              </a>
+              </Link>
             </div>
           </div>
           <div className="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
@@ -236,8 +241,14 @@ export default function Footer() {
         </div>
         <div className="mt-12 border-t border-gray-200 pt-8">
           <p className="text-base text-gray-400 xl:text-center">
-            &copy; {new Date().getFullYear()} Contentify, Inc. All rights
+            &copy; {new Date().getFullYear()} Verbosity AI, Inc. All rights
             reserved.
+          </p>
+          <p className="text-base text-gray-400 xl:text-center">
+            Lead developer of this website:{" "}
+            <Link href="https://github.com/RiyadhBenhallou" target="_blank">
+              Riyadh Benhallou
+            </Link>
           </p>
         </div>
       </div>
