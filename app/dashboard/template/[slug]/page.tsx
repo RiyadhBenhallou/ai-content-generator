@@ -2,64 +2,69 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 import { chatSession } from "@/lib/ai-model";
-import { aiTemplates } from "@/lib/utils";
+import { aiTemplates, TemplateType } from "@/lib/utils";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
 import { Copy, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { fetchUserActivity, saveOutputAction } from "./actions";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useCreditsUsage } from "../../providers";
-import { useToast } from "@/hooks/use-toast";
+import { saveOutputAction } from "./actions";
 
 export default function TemplatePage({
   params: { slug },
 }: {
   params: { slug: string };
 }) {
-  const router = useRouter();
   const { usedCredits, setUsedCredits } = useCreditsUsage();
-  const template = aiTemplates.find((t) => t.slug === slug);
-  if (!template) {
-    return <div>Template not found</div>;
-  }
-
+  const [template, setTemplate] = useState<TemplateType | null>(null);
   const [output, setOutput] = useState("");
-  const { data: session } = useSession();
-
   const [isLoading, startTransition] = useTransition();
+  const editorRef = useRef<Editor>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const foundTemplate = aiTemplates.find((t) => t.slug === slug);
+    setTemplate(foundTemplate || null);
+  }, [slug]);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.getInstance().setMarkdown(output);
+    }
+  }, [output]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!template) return;
+
     const formData = new FormData(event.currentTarget);
     const prompt = template.form
       .map((field) => `${field.label}: ${formData.get(field.name)}`)
       .join(",");
-    // Combine the template's prompt with the user's input
     const fullPrompt = `${template.prompt}\n\n${prompt}`;
     console.log("Full prompt:", fullPrompt);
 
+    if (usedCredits !== null && usedCredits >= 10000) {
+      toast({
+        description: "You have used all your credits. Please buy more credits.",
+      });
+      return;
+    }
+
     startTransition(async () => {
       try {
-        if (usedCredits >= 10000) {
-          editorRef.current
-            ?.getInstance()
-            .setMarkdown(
-              "**You have used all your credits. Please buy more credits.**"
-            );
-          return;
-        }
         const result = await chatSession.sendMessage(fullPrompt);
-        const response = await result.response;
+        const response = result.response;
         const text = response.text();
         setOutput(text);
         await saveOutputAction(template.name, prompt, text);
 
-        // Count words in the generated text
         const wordCount = text.split(/\s+/).length;
-        setUsedCredits((prevCredits: any) => prevCredits + wordCount);
+        setUsedCredits((prevCredits: number | null) =>
+          prevCredits !== null ? prevCredits + wordCount : wordCount
+        );
       } catch (error) {
         console.error("Error generating content:", error);
         setOutput("An error occurred while generating content.");
@@ -67,11 +72,9 @@ export default function TemplatePage({
     });
   };
 
-  const editorRef = useRef<Editor>(null);
-  const { toast } = useToast();
   const handleCopy = () => {
-    if (editorRef.current) {
-      const content = editorRef.current.getInstance().getMarkdown();
+    const content = editorRef?.current?.getInstance().getMarkdown();
+    if (content) {
       navigator.clipboard.writeText(content).then(() => {
         console.log("Content copied to clipboard");
         toast({
@@ -81,14 +84,9 @@ export default function TemplatePage({
     }
   };
 
-  useEffect(() => {
-    const editor = editorRef.current?.getInstance();
-    if (editor) {
-      editor.setMarkdown(output);
-    }
-  }, [output]);
-
-  console.log(output);
+  if (!template) {
+    return <div>Template not found</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4 bg-slate-100 min-h-screen">

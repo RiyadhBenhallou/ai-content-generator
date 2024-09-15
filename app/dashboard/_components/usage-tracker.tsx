@@ -3,9 +3,9 @@
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { fetchUserActivity } from "../template/[slug]/actions";
+import { useEffect } from "react";
 import { useCreditsUsage } from "../providers";
+import { fetchUserActivity } from "../template/[slug]/actions";
 
 export default function UsageTracker() {
   const { data: session } = useSession();
@@ -24,7 +24,7 @@ export default function UsageTracker() {
       }
     }
     loadUserActivity();
-  }, [session?.user?.id]);
+  }, [session?.user?.id, setUsedCredits]);
 
   const percentageUsed =
     usedCredits !== null ? (usedCredits / totalCredits) * 100 : 0;

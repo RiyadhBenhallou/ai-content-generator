@@ -6,11 +6,12 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CreditCard, History, LogOut, Settings } from "lucide-react";
+import { History, LogOut } from "lucide-react";
+import { User } from "next-auth";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
-export default function ProfileAvatar({ user }: { user: any }) {
+export default function ProfileAvatar({ user }: { user: User }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
