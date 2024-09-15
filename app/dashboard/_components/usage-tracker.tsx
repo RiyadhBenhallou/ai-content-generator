@@ -9,7 +9,6 @@ import { useCreditsUsage } from "../providers";
 
 export default function UsageTracker() {
   const { data: session } = useSession();
-  console.log(session?.user?.id);
 
   // const [usedCredits, setUsedCredits] = useState<number | null>(null);
   const { usedCredits, setUsedCredits } = useCreditsUsage();

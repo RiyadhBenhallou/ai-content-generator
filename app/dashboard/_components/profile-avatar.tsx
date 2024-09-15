@@ -11,7 +11,6 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 export default function ProfileAvatar({ user }: { user: any }) {
-  console.log(user);
   return (
     <Popover>
       <PopoverTrigger asChild>
