@@ -36,7 +36,7 @@ export default function OutputSection({ content }: { content: string }) {
       </div>
       <Editor
         ref={editorRef}
-        initialValue={content || "hello react editor world!"}
+        initialValue=""
         // previewStyle="vertical"
         height="600px"
         initialEditType="markdown"

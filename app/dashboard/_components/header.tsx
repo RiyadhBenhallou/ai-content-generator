@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import { auth } from "@/lib/auth";
 import ProfileAvatar from "./profile-avatar";
 import { User } from "next-auth";
-
 export default async function Header() {
   const session = await auth();
   return (
@@ -16,6 +15,7 @@ export default async function Header() {
             >
               Memberships are not available yet.
             </Badge>
+            {/* <ProfileAvatar user={session?.user as User} /> */}
             <ProfileAvatar user={session?.user as User} />
           </div>
         </div>

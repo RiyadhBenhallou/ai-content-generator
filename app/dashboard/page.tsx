@@ -2,8 +2,8 @@
 import { aiTemplates } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
-import TemplateCard from "./_components/template-card";
 import { Search } from "lucide-react";
+import TemplateCard from "./_components/template-card";
 
 export default function Dashboard() {
   const [searchTerm, setSearchTerm] = useState("");

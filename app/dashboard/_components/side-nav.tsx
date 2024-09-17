@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Bot, History, Home } from "lucide-react";
+import { Bot, History, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import UsageTracker from "./usage-tracker";
@@ -23,8 +23,8 @@ export default function SideNav() {
           }`}
         >
           <Link href="/dashboard" className="flex items-center space-x-2">
-            <Home size={24} />
-            <span>Home</span>
+            <LayoutDashboard size={24} />
+            <span>Dashboard</span>
           </Link>
         </Button>
         <Button

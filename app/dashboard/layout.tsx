@@ -5,6 +5,7 @@ import Providers from "./providers";
 import SideNav from "./_components/side-nav";
 import Header from "./_components/header";
 import { Toaster } from "@/components/ui/toaster";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -41,6 +42,7 @@ export default function RootLayout({
               <Header />
 
               <div className="">
+                <NextTopLoader color="#2563eb" />
                 {children}
                 <Toaster />
               </div>
